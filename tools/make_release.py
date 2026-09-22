@@ -53,17 +53,36 @@ def sha256_of(path):
     return h.hexdigest()
 
 
+# Фиксированное время и права для всех записей архива.
+#
+# Иначе архив меняется от запуска к запуску: package.json пересобирается
+# каждый раз с новым временем, а os.walk обходит каталоги в произвольном
+# порядке. Контрольная сумма тогда перестаёт совпадать с уже выложенными
+# файлами, и приложение отказывается устанавливать пакет.
+FIXED_TIMESTAMP = (2020, 1, 1, 0, 0, 0)
+
+
+def add_file(z, full, arc):
+    """Кладёт файл в архив с фиксированными метаданными."""
+    info = zipfile.ZipInfo(arc, date_time=FIXED_TIMESTAMP)
+    info.compress_type = zipfile.ZIP_DEFLATED
+    info.external_attr = 0o644 << 16
+
+    with open(full, 'rb') as f:
+        z.writestr(info, f.read())
+
+
 def make_zip(source_dir, archive_path, flatten=False, skip_names=()):
     """Упаковывает каталог. flatten — класть файлы в корень архива."""
     with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as z:
         for root, _, files in os.walk(source_dir):
-            for name in files:
+            for name in sorted(files):
                 if name in skip_names or name == '.DS_Store':
                     continue
 
                 full = os.path.join(root, name)
                 arc = name if flatten else os.path.relpath(full, os.path.dirname(source_dir))
-                z.write(full, arc)
+                add_file(z, full, arc)
 
 
 def build_locales():
@@ -73,7 +92,7 @@ def build_locales():
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as z:
         for name in sorted(os.listdir(LOCALE_SRC)):
             if name.startswith('strings.') and name.endswith('.json'):
-                z.write(os.path.join(LOCALE_SRC, name), name)
+                add_file(z, os.path.join(LOCALE_SRC, name), name)
 
     return archive
 
@@ -96,13 +115,13 @@ def build_engine(package_id):
 
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as z:
         for root, _, files in os.walk(source):
-            for name in files:
+            for name in sorted(files):
                 if name == '.DS_Store':
                     continue
 
                 full = os.path.join(root, name)
                 arc = os.path.relpath(full, os.path.dirname(source))
-                z.write(full, arc)
+                add_file(z, full, arc)
 
     return archive
 

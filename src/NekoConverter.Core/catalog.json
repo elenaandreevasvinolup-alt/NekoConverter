@@ -20,9 +20,12 @@
   // их одновременно и берёт быстрейшую, а при обрыве переходит к следующей.
   "releaseBase": {
     "github": "https://github.com/elenaandreevasvinolup-alt/NekoConverter/releases/download/v1.0.0",
-    "gitee": "https://gitee.com/elenaandreevasvinolup-alt/NekoConverter/releases/download/v1.0.0",
+    "gitee": "https://gitee.com/NekoAndreeva/NekoConverter/releases/download/v1.0.0",
     "jsdelivr": "https://cdn.jsdelivr.net/gh/elenaandreevasvinolup-alt/NekoConverter@v1.0.0/dist/downloads"
   },
+
+
+
 
 
 
@@ -46,7 +49,7 @@
       "sourceUrl": "https://evermeet.cx/ffmpeg/",
       "downloadUrl": "",
       "sizeBytes": 26957735,
-      "sha256": "07810863ebaf41f9ba172952646d72afec628371ac5ba7cb34d8c8bfe22509ab",
+      "sha256": "f630ffa3d7113a36599560fa89607e88759c1eb3a27067ebd3753172884311a2",
       "archive": "zip",
       "executable": "ffmpeg",
       "providesEngines": ["ffmpeg"],
@@ -98,8 +101,8 @@
       "license": "GPL-2.0+",
       "sourceUrl": "https://pandoc.org/",
       "downloadUrl": "",
-      "sizeBytes": 26069504,
-      "sha256": "90110965a2b81c408a2fbf0711ed34a5f60f41b13ce220ce68ca51060f571e1e",
+      "sizeBytes": 26069644,
+      "sha256": "7ef17b0e624963a6b0ab3ef46e7f50b73113810f02de447c7534536d77204ac8",
       "archive": "zip",
       "executable": "bin/pandoc",
       "providesEngines": ["pandoc"],
@@ -170,7 +173,7 @@
       },
       "license": "MIT",
       "sizeBytes": 54522,
-      "sha256": "25ca45cfbc94ff0b541be3afd907b882ef0ea78b4b828c96baf02f9404e129b1",
+      "sha256": "23c633c8e8b7fcd45b0a4bf68a14b0fbf25ff14bf5da6e385d2a042eb9b20e56",
       "archive": "zip",
 
       // Несколько адресов одного архива. Приложение замеряет их одновременно
