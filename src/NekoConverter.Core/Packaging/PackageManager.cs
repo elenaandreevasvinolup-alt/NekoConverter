@@ -682,6 +682,15 @@ public sealed class PackageManager
                 await DownloadFromAsync(package, url, destination, progress, cancellationToken)
                     .ConfigureAwait(false);
 
+                // Проверяем сразу после каждой площадки, а не один раз после цикла.
+                // Иначе устаревший или битый файл на одном зеркале обрывает
+                // установку целиком, хотя на соседнем лежит правильный.
+                if (!string.IsNullOrWhiteSpace(package.Sha256) && !ChecksumMatches(package, destination))
+                {
+                    throw new InvalidDataException(
+                        $"Checksum mismatch for \"{package.Id}\" from {new Uri(url).Host}.");
+                }
+
                 return;
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
