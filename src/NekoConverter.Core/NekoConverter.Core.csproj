@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>NekoConverter.Core</RootNamespace>
+    <AssemblyName>NekoConverter.Core</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Версии намеренно совпадают с Avalonia 12.1.2 -> Avalonia.Skia 3.119.4, чтобы нативные библиотеки не конфликтовали. -->
+    <PackageReference Include="SkiaSharp" Version="3.119.4" />
+    <PackageReference Include="PdfSharp" Version="6.2.4" />
+    <!-- YAML: используется низкоуровневое дерево, без отражения (см. YamlConverter). -->
+    <PackageReference Include="YamlDotNet" Version="18.1.0" />
+    <!--
+      3D: AssimpNetter приносит и управляемую обёртку, и нативные библиотеки
+      под все платформы (около 10 МБ на платформу). Проверено: работает в NativeAOT.
+      Это тот случай, когда встраивание оправдано — 10 МБ против 100 МБ у FFmpeg,
+      зато семь форматов доступны сразу и без загрузок.
+    -->
+    <PackageReference Include="AssimpNetter" Version="6.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Таблица форматов — ДАННЫЕ, а не код. Файл кладётся рядом с приложением,
+      чтобы формат можно было добавить правкой JSON без перекомпиляции.
+    -->
+    <None Update="formats.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <!-- Каталог пакетов: что можно установить и откуда скачать. -->
+    <None Update="catalog.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+
+    <!--
+      Те же два файла дублируются встроенными ресурсами.
+      Причина: на Android приложение лежит внутри APK, и прочитать соседний файл
+      через AppContext.BaseDirectory нельзя. На десктопе и в iOS работает файл рядом,
+      на Android — встроенная копия. Порядок поиска в коде именно такой.
+    -->
+    <EmbeddedResource Include="formats.json" LogicalName="NekoConverter.formats.json" />
+    <EmbeddedResource Include="catalog.json" LogicalName="NekoConverter.catalog.json" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "id": "sample-second-order-locus",
+  "kind": "2d-geometry",
+  "lang": "zh-Hans",
+  "title": "二级动点与轨迹",
+  "statement": "圆 O 的半径为 2，A 为定点，点 C 在圆 O 上运动，D 是 AC 的中点。求 D 的轨迹。",
+  "objects": [
+    { "id": "O", "type": "point", "at": [0, 0], "label": "O" },
+    { "id": "c", "type": "circle", "center": "O", "radius": 2 },
+    { "id": "A", "type": "point", "at": [4, 0], "label": "A" },
+    {
+      "id": "C", "type": "point", "path": "c", "param": 0.15, "label": "C",
+      "driver": { "min": 0, "max": 1, "value": 0.15, "speed": 0.35, "pingPong": false }
+    },
+    { "id": "AC", "type": "segment", "a": "A", "b": "C", "style": "helper" },
+    { "id": "D", "type": "point", "derived": "midpoint", "args": ["A", "C"], "label": "D" },
+    { "id": "OA", "type": "segment", "a": "O", "b": "A" },
+    { "id": "M", "type": "point", "derived": "midpoint", "args": ["O", "A"], "label": "M" },
+    { "id": "MD", "type": "segment", "a": "M", "b": "D", "style": "answer" }
+  ],
+  "ask": { "target": "MD", "measure": "length" },
+  "answer": {
+    "value": "以 OA 中点 M 为圆心、半径 1 的圆",
+    "steps": ["D 是 AC 中点", "MD 是 △AOC 的中位线，MD = OC/2 = 1"]
+  }
+}

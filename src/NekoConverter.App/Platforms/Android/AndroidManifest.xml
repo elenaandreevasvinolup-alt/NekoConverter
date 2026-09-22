@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="35" />
+
+  <!-- Доступ в сеть нужен только для загрузки пакетов-зависимостей. -->
+  <uses-permission android:name="android.permission.INTERNET" />
+
+  <application
+      android:label="NekoConverter"
+      android:icon="@drawable/icon"
+      android:allowBackup="true"
+      android:supportsRtl="true" />
+</manifest>

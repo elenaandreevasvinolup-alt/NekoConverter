@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "id": "sample-moving-point",
+  "kind": "2d-geometry",
+  "lang": "zh-Hans",
+  "title": "线段上的动点",
+  "statement": "正方形 ABCD 边长为 4，点 P 在 BC 上运动，设 BP = x。求 AP + PD 的最小值。",
+  "objects": [
+    { "id": "A", "type": "point", "at": [0, 0], "label": "A" },
+    { "id": "B", "type": "point", "at": [4, 0], "label": "B" },
+    { "id": "C", "type": "point", "at": [4, 4], "label": "C" },
+    { "id": "D", "type": "point", "at": [0, 4], "label": "D" },
+    { "id": "sq", "type": "polygon", "vertices": ["A", "B", "C", "D"], "filled": false },
+    { "id": "BC", "type": "segment", "a": "B", "b": "C", "style": "highlight" },
+    {
+      "id": "P", "type": "point", "path": "BC", "param": 0.4, "label": "P",
+      "driver": { "min": 0, "max": 1, "value": 0.4, "speed": 0.5, "pingPong": true }
+    },
+    { "id": "AP", "type": "segment", "a": "A", "b": "P" },
+    { "id": "PD", "type": "segment", "a": "P", "b": "D", "style": "answer" }
+  ],
+  "ask": { "target": "PD", "measure": "length" },
+  "answer": { "value": "4√5", "steps": ["把 A 关于 BC 对称到 A'=(8,0)", "AP + PD = A'P + PD ≥ A'D", "A'D = √(8² + 4²) = 4√5，P 取 BC 中点时取到"] }
+}

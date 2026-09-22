@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<table>
+  <row>
+    <name>张三</name>
+    <age>28</age>
+    <note>含逗号的备注, 用来测试引号转义</note>
+    <city>北京</city>
+  </row>
+  <row>
+    <name>李四</name>
+    <age>35</age>
+    <note>普通备注</note>
+    <city>上海</city>
+  </row>
+  <row>
+    <name>Ольга</name>
+    <age>41</age>
+    <note>Кавычки "внутри" поля</note>
+    <city>Москва</city>
+  </row>
+</table>

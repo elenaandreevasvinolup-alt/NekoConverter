@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "id": "sample-altitude",
+  "kind": "2d-geometry",
+  "lang": "zh-Hans",
+  "title": "作高与垂足",
+  "statement": "△ABC 中，作 A 到 BC 的垂线，垂足为 H。求 AH。",
+  "objects": [
+    { "id": "A", "type": "point", "at": [1, 4], "label": "A" },
+    { "id": "B", "type": "point", "at": [-1, 0], "label": "B" },
+    { "id": "C", "type": "point", "at": [6, 0], "label": "C" },
+    { "id": "tri", "type": "polygon", "vertices": ["A", "B", "C"], "filled": false },
+    { "id": "BC", "type": "segment", "a": "B", "b": "C" },
+    { "id": "H", "type": "point", "derived": "foot", "args": ["A", "BC"], "label": "H" },
+    { "id": "BH", "type": "segment", "a": "B", "b": "H", "style": "helper" },
+    { "id": "HC", "type": "segment", "a": "H", "b": "C", "style": "helper" },
+    { "id": "AH", "type": "segment", "a": "A", "b": "H", "style": "answer" }
+  ],
+  "ask": { "target": "AH", "measure": "length" },
+  "answer": { "value": "4", "steps": ["垂足 H 的纵坐标为 0", "AH 就是 A 的纵坐标"] }
+}

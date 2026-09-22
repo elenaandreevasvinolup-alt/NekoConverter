@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>MathGeo.Core</RootNamespace>
+
+    <!--
+      内核必须零 UI 依赖：桌面壳、iPad 壳、无头 CLI（render 模式）、MCP server
+      全部复用这一份。谁都不许在这里引用任何 UI 框架。
+
+      AOT/裁剪分析器打开，是为了让"打包后才发现反射失效"变成编译期报错 ——
+      单文件 25MB 的发行方式依赖裁剪，这里不能有侥幸。
+    -->
+    <IsAotCompatible>true</IsAotCompatible>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <!--
+    语言文件两种去处都要有：
+      · 内嵌 —— 保证程序在任何情况下都至少能说中英两种语言，不会出现"界面全是键名"；
+      · 复制到输出目录 —— 译者改完 JSON 立刻生效，不需要重新编译，也不需要装任何工具。
+    打包后同一份内容会进扩展包，所以"开发期是普通文件、发布期是扩展包"这条链是通的。
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="Locales\strings.*.json"
+                      LogicalName="MathGeo.Locale.%(Filename)%(Extension)" />
+    <None Include="Locales\strings.*.json"
+          Link="Locales\%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

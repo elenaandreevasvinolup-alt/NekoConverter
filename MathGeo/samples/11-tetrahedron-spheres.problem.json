@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "id": "sample-tetrahedron-spheres",
+  "kind": "3d-solid",
+  "lang": "zh-Hans",
+  "title": "正四面体的外接球与内切球",
+  "statement": "正四面体 S-ABC 的棱长为 3。求它的外接球半径 R 与内切球半径 r，并比较两者。",
+  "objects": [
+    {
+      "id": "tetra", "type": "solid", "solid": "pyramid",
+      "sides": 3, "radius": 1.7320508, "height": 2.4494897
+    },
+
+    { "id": "outer", "type": "sphere", "of": "tetra", "sphere": "circumscribed", "label": "O" },
+    {
+      "id": "inner", "type": "sphere", "of": "tetra", "sphere": "inscribed",
+      "meridians": 2, "showCenter": false, "showRadius": false
+    }
+  ],
+  "ask": { "target": "outer", "measure": "radius" },
+  "answer": {
+    "value": "R = 3√6/4 ≈ 1.837，r = 3√6/12 ≈ 0.612，R = 3r",
+    "steps": [
+      "正四面体的球心在高上，且到四个顶点、四个面等距",
+      "外接球半径 R = (√6/4)a = 3√6/4",
+      "内切球半径 r = (√6/12)a = 3√6/12",
+      "R = 3r —— 这个 3:1 是正四面体特有的，也是常考结论"
+    ]
+  },
+  "view": { "camera": [40, 22, 20] },
+  "source": { "type": "manual", "textbook": "人教A版必修二", "page": "58" }
+}

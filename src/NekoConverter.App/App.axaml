@@ -1,0 +1,238 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="NekoConverter.App.App"
+             RequestedThemeVariant="Light">
+
+  <Application.Resources>
+    <ResourceDictionary>
+      <!--
+        Цвета живут в двух наборах: светлом и тёмном. Ни один элемент интерфейса
+        не задаёт цвет напрямую — только через DynamicResource. Иначе тёмная тема
+        превращается в лоскутное одеяло из белых пятен.
+      -->
+      <ResourceDictionary.ThemeDictionaries>
+
+        <ResourceDictionary x:Key="Light">
+          <SolidColorBrush x:Key="AppBackground" Color="#F4F5F9" />
+          <SolidColorBrush x:Key="SidebarBackground" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="CardBorder" Color="#E6E8EF" />
+          <SolidColorBrush x:Key="TextPrimary" Color="#1F2430" />
+          <SolidColorBrush x:Key="TextSecondary" Color="#6B7280" />
+          <SolidColorBrush x:Key="TextTertiary" Color="#9CA3AF" />
+          <SolidColorBrush x:Key="Accent" Color="#5B6BE8" />
+          <SolidColorBrush x:Key="AccentHover" Color="#4A5AD8" />
+          <SolidColorBrush x:Key="AccentSoft" Color="#EEF0FE" />
+          <SolidColorBrush x:Key="AccentText" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="Success" Color="#2FA84F" />
+          <SolidColorBrush x:Key="Warning" Color="#C8871F" />
+          <SolidColorBrush x:Key="Danger" Color="#D0453F" />
+          <SolidColorBrush x:Key="DropZoneBackground" Color="#FAFBFF" />
+          <SolidColorBrush x:Key="DropZoneBorder" Color="#C9CFE4" />
+          <SolidColorBrush x:Key="DropZoneActiveBackground" Color="#EDF0FF" />
+          <SolidColorBrush x:Key="DropZoneActiveBorder" Color="#5B6BE8" />
+          <SolidColorBrush x:Key="SubtleBackground" Color="#F2F3F7" />
+          <SolidColorBrush x:Key="NavHover" Color="#F2F3F7" />
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Dark">
+          <SolidColorBrush x:Key="AppBackground" Color="#14161C" />
+          <SolidColorBrush x:Key="SidebarBackground" Color="#1A1D24" />
+          <SolidColorBrush x:Key="CardBackground" Color="#1E222A" />
+          <SolidColorBrush x:Key="CardBorder" Color="#2A2F3A" />
+          <SolidColorBrush x:Key="TextPrimary" Color="#E8EAF0" />
+          <SolidColorBrush x:Key="TextSecondary" Color="#9AA1B0" />
+          <SolidColorBrush x:Key="TextTertiary" Color="#6E7686" />
+          <SolidColorBrush x:Key="Accent" Color="#7C8BF5" />
+          <SolidColorBrush x:Key="AccentHover" Color="#8E9BF7" />
+          <SolidColorBrush x:Key="AccentSoft" Color="#262B45" />
+          <SolidColorBrush x:Key="AccentText" Color="#FFFFFF" />
+          <SolidColorBrush x:Key="Success" Color="#4ED17A" />
+          <SolidColorBrush x:Key="Warning" Color="#E0A94A" />
+          <SolidColorBrush x:Key="Danger" Color="#F0736C" />
+          <SolidColorBrush x:Key="DropZoneBackground" Color="#191C24" />
+          <SolidColorBrush x:Key="DropZoneBorder" Color="#333A4A" />
+          <SolidColorBrush x:Key="DropZoneActiveBackground" Color="#232941" />
+          <SolidColorBrush x:Key="DropZoneActiveBorder" Color="#7C8BF5" />
+          <SolidColorBrush x:Key="SubtleBackground" Color="#20242D" />
+          <SolidColorBrush x:Key="NavHover" Color="#232833" />
+        </ResourceDictionary>
+
+      </ResourceDictionary.ThemeDictionaries>
+    </ResourceDictionary>
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme />
+
+    <!-- Карточка: основной строительный блок всех страниц. -->
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="{DynamicResource CardBackground}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <!-- Заголовок карточки, как в NekoDynamicCollision. -->
+    <Style Selector="TextBlock.cardTitle">
+      <Setter Property="FontSize" Value="15" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+      <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+    <!-- Строка списка движков: имя моноширинным, форматы — приглушённо. -->
+    <Style Selector="TextBlock.engineName">
+      <Setter Property="FontFamily" Value="Menlo, Consolas, monospace" />
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+      <!-- Ширина фиксирована, чтобы имена выстраивались в колонку, но длинные
+           (вроде external-misc) обрезаются, а не наезжают на список форматов. -->
+      <Setter Property="Width" Value="118" />
+      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+      <Setter Property="Margin" Value="0,0,10,0" />
+    </Style>
+
+    <Style Selector="TextBlock.engineFormats">
+      <Setter Property="FontSize" Value="11" />
+      <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style Selector="TextBlock.engineBadge">
+      <Setter Property="FontSize" Value="10" />
+      <Setter Property="Foreground" Value="{DynamicResource TextTertiary}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBlock.engineGroup">
+      <Setter Property="FontSize" Value="11" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{DynamicResource TextTertiary}" />
+      <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+    <Style Selector="TextBlock.hint">
+      <Setter Property="FontSize" Value="11" />
+      <Setter Property="Foreground" Value="{DynamicResource TextTertiary}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="LineHeight" Value="17" />
+    </Style>
+
+    <Style Selector="TextBlock.label">
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- Пункт бокового меню. -->
+    <Style Selector="Button.nav">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Padding" Value="14,10" />
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="CornerRadius" Value="8" />
+    </Style>
+
+    <Style Selector="Button.nav:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource NavHover}" />
+    </Style>
+
+    <Style Selector="Button.nav.active">
+      <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector="Button.nav.active /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource AccentSoft}" />
+    </Style>
+
+    <!-- Основная кнопка действия. -->
+    <Style Selector="Button.primary">
+      <Setter Property="Background" Value="{DynamicResource Accent}" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentText}" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="18,10" />
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource AccentHover}" />
+    </Style>
+
+    <!-- Второстепенная кнопка: та же форма, но без заливки. -->
+    <Style Selector="Button.ghost">
+      <Setter Property="Background" Value="{DynamicResource SubtleBackground}" />
+      <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="14,8" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+
+    <!-- Переключатель-таблетка, как в панелях Dynamic Collision. -->
+    <Style Selector="Button.pill">
+      <Setter Property="Background" Value="{DynamicResource SubtleBackground}" />
+      <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="16,8" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+
+    <Style Selector="Button.pill.active">
+      <Setter Property="Background" Value="{DynamicResource Accent}" />
+      <Setter Property="Foreground" Value="{DynamicResource AccentText}" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <!-- Зона приёма файлов. Цвета берутся из темы, а состояние переключается
+         классом active — поэтому в коде нет ни одной жёстко заданной кисти. -->
+    <Style Selector="Rectangle.dropzone">
+      <Setter Property="Stroke" Value="{DynamicResource DropZoneBorder}" />
+      <Setter Property="Fill" Value="{DynamicResource DropZoneBackground}" />
+      <Setter Property="StrokeThickness" Value="2" />
+      <Setter Property="StrokeDashArray" Value="7,5" />
+    </Style>
+
+    <Style Selector="Rectangle.dropzone.active">
+      <Setter Property="Stroke" Value="{DynamicResource DropZoneActiveBorder}" />
+      <Setter Property="Fill" Value="{DynamicResource DropZoneActiveBackground}" />
+    </Style>
+
+    <!-- Нижняя навигация: значок над подписью, как в мобильных приложениях. -->
+    <Style Selector="Button.bottomnav">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="Padding" Value="0,10" />
+      <Setter Property="CornerRadius" Value="0" />
+    </Style>
+
+    <Style Selector="Button.bottomnav TextBlock">
+      <Setter Property="Foreground" Value="{DynamicResource TextTertiary}" />
+    </Style>
+
+    <Style Selector="Button.bottomnav.active TextBlock">
+      <Setter Property="Foreground" Value="{DynamicResource Accent}" />
+    </Style>
+
+    <Style Selector="Button.bottomnav.active">
+      <Setter Property="Background" Value="{DynamicResource AccentSoft}" />
+    </Style>
+
+    <Style Selector="ComboBox">
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="MinHeight" Value="34" />
+    </Style>
+
+  </Application.Styles>
+</Application>

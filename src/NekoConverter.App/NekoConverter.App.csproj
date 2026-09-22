@@ -1,0 +1,95 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      По умолчанию собирается только десктоп, мобильные платформы включаются по одной:
+        -p:IncludeAndroid=true
+        -p:IncludeIos=true
+
+      Раньше обе платформы включались одним флагом IncludeMobile, и это была ошибка:
+      при сборке под Android SDK всё равно требовал установить ещё и workload iOS,
+      потому что целевые платформы перечислялись вместе (NETSDK1147).
+      Теперь платформы независимы, и для Android Xcode не нужен вовсе.
+    -->
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(IncludeAndroid)' == 'true'">$(TargetFrameworks);net10.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="'$(IncludeIos)' == 'true'">$(TargetFrameworks);net10.0-ios</TargetFrameworks>
+
+    <OutputType Condition="'$(TargetFramework)' == 'net10.0'">WinExe</OutputType>
+    <OutputType Condition="'$(TargetFramework)' != 'net10.0'">Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>NekoConverter.App</RootNamespace>
+    <AssemblyName>NekoConverter</AssemblyName>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest Condition="'$(TargetFramework)' == 'net10.0'">app.manifest</ApplicationManifest>
+
+    <SupportedOSPlatformVersion Condition="$(TargetFramework.StartsWith('net10.0-ios'))">13.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$(TargetFramework.StartsWith('net10.0-android'))">24.0</SupportedOSPlatformVersion>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.1.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
+  </ItemGroup>
+
+  <!-- Настольная оболочка нужна только десктопу. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.2" />
+    <!--
+      Avalonia.Diagnostics (DevTools) сюда НЕ добавлен: для ветки 12.x он не выпущен,
+      самая свежая версия — 11.3.22. Из-за этой ссылки падал restore в конфигурации Debug.
+      На работу приложения отсутствие DevTools не влияет.
+    -->
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net10.0-android'))">
+    <PackageReference Include="Avalonia.Android" Version="12.1.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net10.0-ios'))">
+    <PackageReference Include="Avalonia.iOS" Version="12.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../NekoConverter.Core/NekoConverter.Core.csproj" />
+  </ItemGroup>
+
+  <!--
+    Языковые файлы: копия рядом с приложением (перевод можно поправить без
+    перекомпиляции) плюс встроенная копия (Android читает только её, потому что
+    приложение лежит внутри APK).
+  -->
+  <ItemGroup>
+    <None Include="Locale/strings.*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <EmbeddedResource Include="Locale/strings.*.json"
+                      LogicalName="NekoConverter.Locale.%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!--
+    Файлы платформ подключаются строго к своей платформе.
+    Без этого настольная сборка пыталась бы скомпилировать MainActivity,
+    а сборка под Android — AppDelegate, и обе падали бы на неизвестных типах.
+  -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <Compile Remove="Platforms/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net10.0-android'))">
+    <Compile Remove="Platforms/iOS/**/*.cs" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="$(TargetFramework.StartsWith('net10.0-android'))">
+    <AndroidManifest>Platforms/Android/AndroidManifest.xml</AndroidManifest>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net10.0-ios'))">
+    <Compile Remove="Platforms/Android/**/*.cs" />
+  </ItemGroup>
+
+</Project>

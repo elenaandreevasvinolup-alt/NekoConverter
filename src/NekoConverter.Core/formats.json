@@ -1,0 +1,206 @@
+{
+  // Ядро: форматы, доступные сразу после установки, без модулей.
+  // Таблица — ДАННЫЕ. Добавить формат = правка этого файла, без перекомпиляции.
+  "schema": 1,
+  "moduleId": null,
+  "moduleName": "Core",
+  "moduleSizeBytes": 0,
+  "moduleLicense": "MIT",
+  "requiresEngines": ["skia", "sips", "pcm", "subtitle", "data", "builtin"],
+
+  "formats": [
+
+    // ───────── IMAGE · движок skia (в процессе, самый быстрый) ─────────
+    { "id": "png",  "kind": "image", "ext": ["png"],  "read": true, "write": true,  "engine": "skia", "label": "PNG",  "note": "无损，支持透明" },
+    { "id": "jpeg", "kind": "image", "ext": ["jpg", "jpeg"], "read": true, "write": true, "engine": "skia", "label": "JPEG", "note": "有损压缩" },
+    { "id": "webp", "kind": "image", "ext": ["webp"], "read": true, "write": true,  "engine": "skia", "label": "WebP", "note": "有损/无损" },
+    { "id": "gif",  "kind": "image", "ext": ["gif"],  "read": true, "write": true,  "engine": "skia", "label": "GIF",  "note": "索引色，支持动画" },
+    { "id": "bmp",  "kind": "image", "ext": ["bmp", "dib"], "read": true, "write": true, "engine": "skia", "label": "BMP", "note": "Windows 位图" },
+
+    // ───────── IMAGE · движок sips (macOS ImageIO: 59 форматов, 0 МБ) ─────────
+    // Здесь и вся длинная линейка, и ВСЕ RAW камер, и HEIC, AVIF, JXL, SVG.
+    { "id": "tiff",  "kind": "image", "ext": ["tif", "tiff"], "read": true, "write": true,  "engine": "sips", "label": "TIFF", "note": "印刷级，支持多页" },
+    { "id": "heic",  "kind": "image", "ext": ["heic", "heif", "heics"], "read": true, "write": true, "engine": "sips", "label": "HEIC / HEIF", "note": "Apple 高效图" },
+    { "id": "avif",  "kind": "image", "ext": ["avif", "avci"], "read": true, "write": false, "engine": "sips", "label": "AVIF", "note": "AV1 图像编码" },
+    { "id": "jxl",   "kind": "image", "ext": ["jxl"],  "read": true, "write": false, "engine": "sips", "label": "JPEG XL", "note": "新一代无损" },
+    { "id": "jp2",   "kind": "image", "ext": ["jp2", "j2k"], "read": true, "write": true, "engine": "sips", "label": "JPEG 2000", "note": "JP2" },
+    { "id": "psd",   "kind": "image", "ext": ["psd", "psb"], "read": true, "write": true, "engine": "sips", "label": "Photoshop", "note": "合成视图" },
+    { "id": "exr",   "kind": "image", "ext": ["exr"],  "read": true, "write": true,  "engine": "sips", "label": "OpenEXR", "note": "高动态范围" },
+    { "id": "hdr",   "kind": "image", "ext": ["hdr", "pic"], "read": true, "write": false, "engine": "sips", "label": "Radiance HDR", "note": "高动态范围" },
+    { "id": "tga",   "kind": "image", "ext": ["tga"],  "read": true, "write": true,  "engine": "sips", "label": "Targa", "note": "TGA" },
+    { "id": "dds",   "kind": "image", "ext": ["dds"],  "read": true, "write": false, "engine": "sips", "label": "DirectDraw", "note": "游戏纹理（只读：sips 写入会产出空文件）" },
+    { "id": "ico",   "kind": "image", "ext": ["ico", "cur"], "read": true, "write": true, "engine": "sips", "label": "Icon", "note": "图标" },
+    { "id": "icns",  "kind": "image", "ext": ["icns"], "read": true, "write": true,  "engine": "sips", "label": "Apple Icon", "note": "macOS 图标" },
+    { "id": "svg",   "kind": "image", "ext": ["svg"],  "read": true, "write": false, "engine": "sips", "label": "SVG", "note": "矢量，栅格化输出" },
+    { "id": "pbm",   "kind": "image", "ext": ["pbm", "pgm", "ppm", "pnm"], "read": true, "write": true, "engine": "sips", "label": "Netpbm", "note": "PBM/PGM/PPM" },
+    { "id": "pict",  "kind": "image", "ext": ["pict", "pct"], "read": true, "write": false, "engine": "sips", "label": "QuickDraw", "note": "旧版 Mac" },
+    { "id": "sgi",   "kind": "image", "ext": ["sgi"],  "read": true, "write": false, "engine": "sips", "label": "SGI", "note": "IRIX" },
+    { "id": "pvr",   "kind": "image", "ext": ["pvr"],  "read": true, "write": true,  "engine": "sips", "label": "PowerVR", "note": "移动 GPU 纹理" },
+    { "id": "mpo",   "kind": "image", "ext": ["mpo"],  "read": true, "write": false, "engine": "sips", "label": "MPO", "note": "多图立体" },
+    { "id": "ktx",   "kind": "image", "ext": ["ktx"], "read": true, "write": true, "engine": "sips", "label": "Khronos KTX", "note": "GPU 纹理" },
+    { "id": "ktx2",  "kind": "image", "ext": ["ktx2"], "read": true, "write": false, "engine": "sips", "label": "Khronos KTX2", "note": "GPU 纹理（只读：sips 不支持写入）" },
+    { "id": "astc",  "kind": "image", "ext": ["astc"], "read": true, "write": true,  "engine": "sips", "label": "ASTC", "note": "GPU 纹理" },
+
+    // ───────── IMAGE · RAW камер: всё это отдаёт macOS ImageIO, 0 МБ ─────────
+    { "id": "cr2",  "kind": "image", "ext": ["cr2", "cr3", "crw"], "read": true, "write": false, "engine": "sips", "label": "Canon RAW", "note": "CR2/CR3/CRW" },
+    { "id": "nef",  "kind": "image", "ext": ["nef", "nrw"], "read": true, "write": false, "engine": "sips", "label": "Nikon RAW", "note": "NEF/NRW" },
+    { "id": "arw",  "kind": "image", "ext": ["arw", "srf", "sr2"], "read": true, "write": false, "engine": "sips", "label": "Sony RAW", "note": "ARW/SRF/SR2" },
+    { "id": "raf",  "kind": "image", "ext": ["raf"],  "read": true, "write": false, "engine": "sips", "label": "Fujifilm RAW", "note": "RAF" },
+    { "id": "orf",  "kind": "image", "ext": ["orf"],  "read": true, "write": false, "engine": "sips", "label": "Olympus RAW", "note": "ORF" },
+    { "id": "rw2",  "kind": "image", "ext": ["rw2"],  "read": true, "write": false, "engine": "sips", "label": "Panasonic RAW", "note": "RW2" },
+    { "id": "pef",  "kind": "image", "ext": ["pef", "ptx"], "read": true, "write": false, "engine": "sips", "label": "Pentax RAW", "note": "PEF/PTX" },
+    { "id": "dng",  "kind": "image", "ext": ["dng", "rwl"], "read": true, "write": false, "engine": "sips", "label": "DNG / Leica", "note": "Adobe 通用" },
+    { "id": "raw-misc", "kind": "image", "ext": ["3fr", "fff", "iiq", "mrw", "mos", "srw", "dcr", "erf", "dxo"], "read": true, "write": false, "engine": "sips", "label": "其他 RAW", "note": "Hasselblad/Leaf/Samsung" },
+
+    // ───────── AUDIO · движок pcm (самописный, 0 МБ) ─────────
+    { "id": "wav",  "kind": "audio", "ext": ["wav"],  "read": true, "write": true, "engine": "pcm", "label": "WAV", "note": "未压缩 PCM" },
+    { "id": "aiff", "kind": "audio", "ext": ["aiff", "aif", "aifc"], "read": true, "write": true, "engine": "pcm", "label": "AIFF", "note": "未压缩 PCM（Apple）" },
+    { "id": "au",   "kind": "audio", "ext": ["au", "snd"], "read": true, "write": true, "engine": "pcm", "label": "AU / SND", "note": "Sun 音频" },
+
+    // ───────── AUDIO · движок afconvert (macOS CoreAudio, 0 МБ) ─────────
+    // Здесь всё, что macOS умеет сама. MP3 только на чтение: кодировщика MP3 в системе нет.
+    { "id": "flac", "kind": "audio", "ext": ["flac"], "read": true, "write": true, "engine": "afconvert", "label": "FLAC", "note": "无损压缩" },
+    // AAC и M4A — это РАЗНЫЕ контейнеры с одним кодеком внутри. Раньше они были одной
+    // строкой, из-за чего выбор «m4a» давал файл в контейнере ADTS с расширением .m4a.
+    { "id": "m4a",  "kind": "audio", "ext": ["m4a", "m4b"], "read": true, "write": true, "engine": "afconvert", "label": "M4A (AAC)", "note": "有损压缩，Apple 容器" },
+    { "id": "aac",  "kind": "audio", "ext": ["aac"],  "read": true, "write": true, "engine": "afconvert", "label": "AAC (ADTS)", "note": "有损压缩，裸流" },
+    { "id": "alac", "kind": "audio", "ext": ["alac"], "read": true, "write": true, "engine": "afconvert", "label": "ALAC", "note": "Apple 无损（M4A 容器）" },
+    { "id": "mp3",  "kind": "audio", "ext": ["mp3"],  "read": true, "write": false, "engine": "afconvert", "label": "MP3", "note": "只读：macOS 无 MP3 编码器" },
+    { "id": "caf",  "kind": "audio", "ext": ["caf"],  "read": true, "write": true, "engine": "afconvert", "label": "CAF", "note": "Apple Core Audio" },
+    { "id": "ac3",  "kind": "audio", "ext": ["ac3"],  "read": true, "write": false, "engine": "afconvert", "label": "AC3", "note": "只读：macOS 无 AC3 编码器" },
+
+    // ───────── AUDIO · требуют модуля av ─────────
+    // Opus — отдельный кодек в контейнере Ogg, а не синоним Ogg: если оставить его
+    // расширением внутри строки ogg, выбор «opus» уйдёт в кодировщик Vorbis.
+    { "id": "ogg",  "kind": "audio", "ext": ["ogg", "oga", "spx"], "read": true, "write": true, "engine": "ffmpeg", "label": "OGG Vorbis / Speex", "note": "有损压缩" },
+    { "id": "opus", "kind": "audio", "ext": ["opus"], "read": true, "write": true, "engine": "ffmpeg", "label": "Opus", "note": "有损压缩，低延迟" },
+    { "id": "wma",  "kind": "audio", "ext": ["wma"],  "read": true, "write": true, "engine": "ffmpeg", "label": "WMA", "note": "微软有损" },
+    // Проверено по списку muxer-ов FFmpeg: wv и tta он умеет писать, а ape и mpc — только читать.
+    { "id": "wv",   "kind": "audio", "ext": ["wv"],  "read": true, "write": true, "engine": "ffmpeg", "label": "WavPack", "note": "无损压缩" },
+    { "id": "tta",  "kind": "audio", "ext": ["tta"], "read": true, "write": true, "engine": "ffmpeg", "label": "TTA", "note": "无损压缩" },
+    { "id": "ape",  "kind": "audio", "ext": ["ape", "mpc"], "read": true, "write": false, "engine": "ffmpeg", "label": "APE / Musepack", "note": "只读：FFmpeg 无对应封装器" },
+    { "id": "amr",  "kind": "audio", "ext": ["amr"],  "read": true, "write": true, "engine": "ffmpeg", "label": "AMR", "note": "语音压缩" },
+    { "id": "dts",  "kind": "audio", "ext": ["dts"], "read": true, "write": true, "engine": "ffmpeg", "label": "DTS", "note": "多声道有损（实验性编码器）" },
+    { "id": "mka",  "kind": "audio", "ext": ["mka"], "read": true, "write": true, "engine": "ffmpeg", "label": "Matroska Audio", "note": "可封装多种编码" },
+    { "id": "ra",   "kind": "audio", "ext": ["ra", "ram"], "read": true, "write": false, "engine": "ffmpeg", "label": "RealAudio", "note": "旧格式" },
+
+    // ───────── SUBTITLE · движок subtitle (самописный, 0 МБ) ─────────
+    { "id": "srt",  "kind": "subtitle", "ext": ["srt"], "read": true, "write": true, "engine": "subtitle", "label": "SubRip SRT", "note": "最广泛支持" },
+    { "id": "ass",  "kind": "subtitle", "ext": ["ass", "ssa"], "read": true, "write": true, "engine": "subtitle", "label": "ASS / SSA", "note": "专业字幕，支持样式" },
+    { "id": "vtt",  "kind": "subtitle", "ext": ["vtt", "webvtt"], "read": true, "write": true, "engine": "subtitle", "label": "WebVTT", "note": "HTML5 标准" },
+    { "id": "microdvd", "kind": "subtitle", "ext": ["sub"], "read": true, "write": true, "engine": "subtitle", "label": "MicroDVD", "note": "帧号计时" },
+    { "id": "ttml", "kind": "subtitle", "ext": ["ttml", "dfxp"], "read": true, "write": true, "engine": "subtitle", "label": "TTML", "note": "广播标准" },
+
+    // ───────── DATA · движок data (самописный, 0 МБ) ─────────
+    { "id": "csv",  "kind": "data", "ext": ["csv"], "read": true, "write": true, "engine": "data", "label": "CSV", "note": "逗号分隔" },
+    { "id": "tsv",  "kind": "data", "ext": ["tsv"], "read": true, "write": true, "engine": "data", "label": "TSV", "note": "制表符分隔" },
+    { "id": "json", "kind": "data", "ext": ["json"], "read": true, "write": true, "engine": "data", "label": "JSON", "note": "结构化" },
+    { "id": "xml",  "kind": "data", "ext": ["xml"], "read": true, "write": true, "engine": "data", "label": "XML", "note": "结构化" },
+
+    // ───────── DOCUMENT ─────────
+    // Встроенный движок читает только DOCX, зато умеет писать PDF и текстовые форматы.
+    // Всё остальное — через Pandoc, если он установлен как зависимость.
+    { "id": "docx", "kind": "document", "ext": ["docx"], "read": true, "write": true,
+      "engine": "builtin", "readEngines": ["builtin"], "writeEngines": ["pandoc"],
+      "label": "Word DOCX", "note": "读取内置；写出需 Pandoc" },
+
+    { "id": "txt", "kind": "document", "ext": ["txt"], "read": true, "write": true,
+      "engine": "builtin", "readEngines": ["pandoc"], "writeEngines": ["builtin", "pandoc"],
+      "label": "纯文本", "note": "UTF-8" },
+
+    { "id": "md", "kind": "document", "ext": ["md", "markdown"], "read": true, "write": true,
+      "engine": "builtin", "readEngines": ["pandoc"], "writeEngines": ["builtin", "pandoc"],
+      "label": "Markdown", "note": "从 DOCX 提取或 Pandoc" },
+
+    { "id": "html", "kind": "document", "ext": ["html", "htm"], "read": true, "write": true,
+      "engine": "builtin", "readEngines": ["pandoc"], "writeEngines": ["builtin", "pandoc"],
+      "label": "HTML", "note": "从 DOCX 提取或 Pandoc" },
+
+    { "id": "pdf", "kind": "document", "ext": ["pdf"], "read": false, "write": true,
+      "engine": "builtin", "writeEngines": ["builtin"],
+      "label": "PDF", "note": "基础版式" },
+
+    { "id": "odt", "kind": "document", "ext": ["odt"], "read": true, "write": true,
+      "engine": "pandoc", "label": "OpenDocument", "note": "需 Pandoc" },
+
+    { "id": "rtf", "kind": "document", "ext": ["rtf"], "read": true, "write": true,
+      "engine": "pandoc", "label": "RTF", "note": "需 Pandoc" },
+
+    { "id": "epub", "kind": "document", "ext": ["epub"], "read": true, "write": true,
+      "engine": "pandoc", "label": "EPUB", "note": "需 Pandoc" },
+
+    { "id": "fb2", "kind": "document", "ext": ["fb2"], "read": true, "write": true,
+      "engine": "pandoc", "label": "FictionBook", "note": "需 Pandoc" },
+
+    { "id": "tex", "kind": "document", "ext": ["tex", "latex"], "read": true, "write": true,
+      "engine": "pandoc", "label": "LaTeX", "note": "需 Pandoc" },
+
+    { "id": "rst", "kind": "document", "ext": ["rst"], "read": true, "write": true,
+      "engine": "pandoc", "label": "reStructuredText", "note": "需 Pandoc" },
+
+    { "id": "org", "kind": "document", "ext": ["org"], "read": true, "write": true,
+      "engine": "pandoc", "label": "Emacs Org", "note": "需 Pandoc" },
+
+    { "id": "docbook", "kind": "document", "ext": ["docbook", "dbk"], "read": true, "write": true,
+      "engine": "pandoc", "label": "DocBook", "note": "需 Pandoc" },
+
+    { "id": "opml", "kind": "document", "ext": ["opml"], "read": true, "write": true,
+      "engine": "pandoc", "label": "OPML", "note": "需 Pandoc" },
+
+    // Ниже — то, что требует внешних программ, а не нашего пакета.
+    // LibreOffice читает и пишет обе стороны, если установлен.
+    { "id": "office-ext", "kind": "document", "ext": ["doc", "dot", "ppt", "odp", "ps", "xps"], "read": true, "write": true,
+      "engine": "libreoffice", "readEngines": ["libreoffice"], "writeEngines": ["libreoffice"],
+      "label": "Office 二进制 / PS / XPS", "note": "需外部程序" },
+
+    { "id": "ebook", "kind": "document", "ext": ["mobi", "azw", "azw3", "prc", "lit", "lrf", "pdb", "cbz", "cbr"], "read": true, "write": true,
+      "engine": "calibre", "readEngines": ["calibre"], "writeEngines": ["calibre"],
+      "label": "电子书", "note": "需外部程序" },
+
+    { "id": "djvu", "kind": "document", "ext": ["djvu"], "read": true, "write": false,
+      "engine": "djvu", "label": "DjVu", "note": "需外部程序 DjVuLibre" },
+
+    // CHM — это сжатая справка Windows. LibreOffice её не открывает,
+    // а Calibre читает через chmlib.
+    { "id": "chm", "kind": "document", "ext": ["chm"], "read": true, "write": false,
+      "engine": "calibre", "label": "CHM", "note": "需外部程序 Calibre" },
+
+    // ───────── VIDEO · требуют модуля av ─────────
+    { "id": "mp4",  "kind": "video", "ext": ["mp4", "m4v"], "read": true, "write": true, "engine": "ffmpeg", "label": "MP4", "note": "最通用" },
+    { "id": "mkv",  "kind": "video", "ext": ["mkv", "mk3d", "mks"], "read": true, "write": true, "engine": "ffmpeg", "label": "Matroska", "note": "可封装任何编码" },
+    { "id": "webm", "kind": "video", "ext": ["webm"], "read": true, "write": true, "engine": "ffmpeg", "label": "WebM", "note": "VP8/VP9/AV1" },
+    { "id": "mov",  "kind": "video", "ext": ["mov"], "read": true, "write": true, "engine": "ffmpeg", "label": "QuickTime", "note": "ProRes/DNxHD" },
+    { "id": "avi",  "kind": "video", "ext": ["avi", "divx"], "read": true, "write": true, "engine": "ffmpeg", "label": "AVI", "note": "老旧但兼容广" },
+    { "id": "wmv",  "kind": "video", "ext": ["wmv", "asf"], "read": true, "write": true, "engine": "ffmpeg", "label": "Windows Media", "note": "VC-1/WMV" },
+    { "id": "flv",  "kind": "video", "ext": ["flv", "f4v"], "read": true, "write": true, "engine": "ffmpeg", "label": "Flash Video", "note": "H.264/VP6" },
+    { "id": "mpegps", "kind": "video", "ext": ["mpg", "mpeg", "vob", "dat"], "read": true, "write": true, "engine": "ffmpeg", "label": "MPEG-PS", "note": "VCD/DVD" },
+    { "id": "mpegts", "kind": "video", "ext": ["ts", "mts", "m2ts", "tp"], "read": true, "write": true, "engine": "ffmpeg", "label": "MPEG-TS", "note": "广播/摄像机" },
+    { "id": "3gp",  "kind": "video", "ext": ["3gp", "3g2"], "read": true, "write": true, "engine": "ffmpeg", "label": "3GPP", "note": "手机" },
+    { "id": "ogv",  "kind": "video", "ext": ["ogv", "ogm", "ogx"], "read": true, "write": true, "engine": "ffmpeg", "label": "Ogg Video", "note": "Theora/Vorbis" },
+    { "id": "rm",   "kind": "video", "ext": ["rm", "rmvb"], "read": true, "write": false, "engine": "ffmpeg", "label": "RealMedia", "note": "旧格式" },
+    { "id": "mxf",  "kind": "video", "ext": ["mxf", "dv", "nut", "y4m", "ivf", "mjpg", "mjpeg", "amv"], "read": true, "write": false, "engine": "ffmpeg", "label": "专业 / 裸流", "note": "广播中间码" },
+
+    // ───────── 3D · движок assimp (встроен, ~10 МБ) ─────────
+    // Assimp приносит и обёртку, и нативные библиотеки, поэтому семь форматов
+    // доступны сразу, без загрузки модулей.
+    { "id": "stl",  "kind": "model3d", "ext": ["stl"], "read": true, "write": true, "engine": "assimp", "label": "STL", "note": "3D 打印" },
+    { "id": "obj",  "kind": "model3d", "ext": ["obj"], "read": true, "write": true, "engine": "assimp", "label": "OBJ", "note": "通用交换" },
+    { "id": "ply",  "kind": "model3d", "ext": ["ply"], "read": true, "write": true, "engine": "assimp", "label": "PLY", "note": "点云/扫描" },
+    { "id": "dae",  "kind": "model3d", "ext": ["dae"], "read": true, "write": true, "engine": "assimp", "label": "COLLADA", "note": "DAE" },
+    { "id": "gltf", "kind": "model3d", "ext": ["gltf"], "read": true, "write": true, "engine": "assimp", "label": "glTF", "note": "Web/AR/VR" },
+    { "id": "glb",  "kind": "model3d", "ext": ["glb"], "read": true, "write": true, "engine": "assimp", "label": "GLB", "note": "glTF 二进制" },
+    { "id": "fbx",  "kind": "model3d", "ext": ["fbx"], "read": true, "write": true, "engine": "assimp", "label": "FBX", "note": "动画/游戏" },
+    { "id": "3mf",  "kind": "model3d", "ext": ["3mf"], "read": true, "write": true, "engine": "assimp", "label": "3MF", "note": "现代 3D 打印" },
+    { "id": "3ds",  "kind": "model3d", "ext": ["3ds"], "read": true, "write": true, "engine": "assimp", "label": "3DS", "note": "Autodesk 旧格式" },
+
+    // ───────── DATA · таблицы и колоночные форматы, модуль data ─────────
+    // XLSX — это ZIP+XML, поэтому читается и пишется встроенными средствами, как DOCX.
+    { "id": "xlsx", "kind": "data", "ext": ["xlsx", "xlsm"], "read": true, "write": true, "engine": "data", "label": "Excel XLSX", "note": "内置（ZIP+XML）" },
+    // А .xls и .xlsb — бинарные форматы, для них нужна отдельная библиотека.
+    { "id": "xls", "kind": "data", "ext": ["xls", "xlsb"], "read": true, "write": false, "engine": "spreadsheet", "label": "Excel 97-2003 / 二进制", "note": "需模块（二进制格式）" },
+    { "id": "ods",  "kind": "data", "ext": ["ods", "fods"], "read": true, "write": true, "engine": "spreadsheet", "label": "OpenDocument 表格", "note": "需模块" },
+    { "id": "parquet", "kind": "data", "ext": ["parquet"], "read": true, "write": true, "engine": "parquet", "label": "Parquet", "note": "需模块" },
+    { "id": "yaml", "kind": "data", "ext": ["yaml", "yml"], "read": true, "write": true, "engine": "data", "label": "YAML", "note": "内置" },
+    { "id": "toml", "kind": "data", "ext": ["toml"], "read": true, "write": true, "engine": "toml", "label": "TOML", "note": "需模块" }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  // Каталог доступных пакетов.
+  //
+  // Здесь нет ни одного адреса нашего собственного сервера: файлы берутся с уже
+  // существующих бесплатных площадок (evermeet.cx, gyan.dev, GitHub Releases).
+  // Приложению достаточно обычной загрузки по HTTPS, поэтому поднимать хостинг не нужно.
+  //
+  // Чтобы добавить пакет: положите архив на GitHub Releases (или любую статику),
+  // посчитайте sha256 командой `nekoconv hash <файл>` и допишите строку сюда.
+  // Перекомпиляция не требуется.
+  "schema": 1,
+  "updated": "2026-09-22",
+  // ─────────── Площадки, откуда приложение скачивает пакеты ───────────
+  //
+  // Заполняется ОДИН раз на весь каталог. Имена файлов подставляются
+  // автоматически по правилу «<id>-<версия>.zip», поэтому дублировать
+  // ссылки в каждом пакете не нужно.
+  //
+  // Три площадки независимы и служат друг другу резервом: приложение замеряет
+  // их одновременно и берёт быстрейшую, а при обрыве переходит к следующей.
+  "releaseBase": {
+    "github": "https://github.com/elenaandreevasvinolup-alt/NekoConverter/releases/download/v1.0.0",
+    "gitee": "https://gitee.com/elenaandreevasvinolup-alt/NekoConverter/releases/download/v1.0.0",
+    "jsdelivr": "https://cdn.jsdelivr.net/gh/elenaandreevasvinolup-alt/NekoConverter@v1.0.0/dist/downloads"
+  },
+
+
+
+
+
+  "packages": [
+
+    // ═══════════ ЗАВИСИМОСТЬ: FFmpeg для macOS ═══════════
+    {
+      "id": "dep-ffmpeg",
+      "kind": "dependency",
+      "platforms": ["osx-x64", "osx-arm64"],
+      "permanent": true,
+      "name": { "zh-Hans": "FFmpeg（音视频引擎）", "en": "FFmpeg (audio/video engine)" },
+      "version": "9.0.2",
+      "description": {
+        "zh-Hans": "原版 FFmpeg 静态构建。安装一次长期保留，音视频格式都靠它。",
+        "en": "Upstream FFmpeg static build. Installed once and kept; all audio/video formats use it."
+      },
+      "license": "GPL-2.0+ (полная статическая сборка evermeet.cx)",
+      "sourceUrl": "https://evermeet.cx/ffmpeg/",
+      "downloadUrl": "",
+      "sizeBytes": 26957735,
+      "sha256": "07810863ebaf41f9ba172952646d72afec628371ac5ba7cb34d8c8bfe22509ab",
+      "archive": "zip",
+      "executable": "ffmpeg",
+      "providesEngines": ["ffmpeg"],
+      "providesFormats": ["mp4", "mkv", "webm", "mov", "avi", "wmv", "flv", "mpegps", "mpegts", "3gp", "ogv", "rm", "mxf", "mp3", "m4a", "aac", "flac", "alac", "ogg", "wma", "ape", "amr", "dts", "ra"],
+      "formats": []
+    },
+
+    // ═══════════ ЗАВИСИМОСТЬ: FFmpeg для Windows ═══════════
+    {
+      "id": "dep-ffmpeg",
+      "kind": "dependency",
+      "platforms": ["win-x64", "win-arm64"],
+      "permanent": true,
+      "name": { "zh-Hans": "FFmpeg（音视频引擎）", "en": "FFmpeg (audio/video engine)" },
+      "version": "latest-essentials",
+      "description": {
+        "zh-Hans": "原版 FFmpeg。体积较大（约 110MB），因为 Windows 版把所有编解码器都静态链接进 exe。",
+        "en": "Upstream FFmpeg. Large (~110 MB) because the Windows build statically links every codec."
+      },
+      "license": "GPL-3.0+ (полная сборка gyan.dev)",
+      "sourceUrl": "https://www.gyan.dev/ffmpeg/builds/",
+      "downloadUrl": "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip",
+      "sizeBytes": 114768076,
+      "sha256": "",
+      "archive": "zip",
+      "executable": "bin/ffmpeg.exe",
+      "prune": ["bin/ffplay.exe", "bin/ffprobe.exe", "doc", "presets"],
+      "providesEngines": ["ffmpeg"],
+      "providesFormats": ["mp4", "mkv", "webm", "mov", "avi", "wmv", "flv", "mpegps", "mpegts", "3gp", "ogv", "rm", "mxf", "mp3", "m4a", "aac", "flac", "alac", "ogg", "wma", "ape", "amr", "dts", "ra"],
+      "formats": []
+    },
+
+    // ═══════════ ЗАВИСИМОСТЬ: Pandoc (документы) ═══════════
+    // Даёт около десятка форматов документов в обе стороны: ODT, RTF, EPUB, LaTeX,
+    // reStructuredText, Org, DocBook, OPML и обратную запись в DOCX.
+    // Встроенный движок умеет только DOCX → PDF/текст, поэтому Pandoc закрывает
+    // как раз то, чего не хватает.
+    {
+      "id": "dep-pandoc",
+      "kind": "dependency",
+      "platforms": ["osx-x64"],
+      "permanent": true,
+      "name": { "zh-Hans": "Pandoc（文档引擎）", "en": "Pandoc (document engine)" },
+      "version": "3.11",
+      "description": {
+        "zh-Hans": "原版 Pandoc 单文件程序。安装一次长期保留，文档格式互转都靠它。",
+        "en": "Upstream Pandoc single binary. Installed once and kept; document conversions use it."
+      },
+      "license": "GPL-2.0+",
+      "sourceUrl": "https://pandoc.org/",
+      "downloadUrl": "",
+      "sizeBytes": 26069504,
+      "sha256": "90110965a2b81c408a2fbf0711ed34a5f60f41b13ce220ce68ca51060f571e1e",
+      "archive": "zip",
+      "executable": "bin/pandoc",
+      "providesEngines": ["pandoc"],
+      "providesFormats": ["docx", "odt", "rtf", "epub", "fb2", "tex", "rst", "org", "docbook", "opml", "md", "html", "txt"],
+      "formats": []
+    },
+
+    {
+      "id": "dep-pandoc",
+      "kind": "dependency",
+      "platforms": ["osx-arm64"],
+      "permanent": true,
+      "name": { "zh-Hans": "Pandoc（文档引擎）", "en": "Pandoc (document engine)" },
+      "version": "3.11",
+      "description": {
+        "zh-Hans": "原版 Pandoc 单文件程序。安装一次长期保留，文档格式互转都靠它。",
+        "en": "Upstream Pandoc single binary. Installed once and kept; document conversions use it."
+      },
+      "license": "GPL-2.0+",
+      "sourceUrl": "https://pandoc.org/",
+      "downloadUrl": "https://github.com/jgm/pandoc/releases/download/3.11/pandoc-3.11-arm64-macOS.zip",
+      "sizeBytes": 41832712,
+      "sha256": "",
+      "archive": "zip",
+      "executable": "bin/pandoc",
+      "providesEngines": ["pandoc"],
+      "providesFormats": ["docx", "odt", "rtf", "epub", "fb2", "tex", "rst", "org", "docbook", "opml", "md", "html", "txt"],
+      "formats": []
+    },
+
+    {
+      "id": "dep-pandoc",
+      "kind": "dependency",
+      "platforms": ["win-x64", "win-arm64"],
+      "permanent": true,
+      "name": { "zh-Hans": "Pandoc（文档引擎）", "en": "Pandoc (document engine)" },
+      "version": "3.11",
+      "description": {
+        "zh-Hans": "原版 Pandoc。安装一次长期保留，文档格式互转都靠它。",
+        "en": "Upstream Pandoc. Installed once and kept; document conversions use it."
+      },
+      "license": "GPL-2.0+",
+      "sourceUrl": "https://pandoc.org/",
+      "downloadUrl": "https://github.com/jgm/pandoc/releases/download/3.11/pandoc-3.11-windows-x86_64.zip",
+      "sizeBytes": 41761100,
+      "sha256": "",
+      "archive": "zip",
+      "executable": "pandoc.exe",
+      "providesEngines": ["pandoc"],
+      "providesFormats": ["docx", "odt", "rtf", "epub", "fb2", "tex", "rst", "org", "docbook", "opml", "md", "html", "txt"],
+      "formats": []
+    },
+
+    // ═══════════ ЯЗЫКОВОЙ ПАКЕТ ═══════════
+    // Отдельный вид пакета: ставится не в каталог движков, а в каталог переводов
+    // (installTo = locale), поэтому после установки языки появляются в настройках
+    // сразу, без перезапуска приложения.
+    {
+      "id": "pack-locales",
+      "kind": "language",
+      "installTo": "locale",
+      "permanent": false,
+      "name": { "zh-Hans": "语言包（16 种）", "en": "Language pack (16)" },
+      "version": "1.0.0",
+      "description": {
+        "zh-Hans": "全部 16 种界面翻译。装完立刻出现在语言列表里。",
+        "en": "All 16 interface translations. They appear in the language list right after install."
+      },
+      "license": "MIT",
+      "sizeBytes": 54522,
+      "sha256": "25ca45cfbc94ff0b541be3afd907b882ef0ea78b4b828c96baf02f9404e129b1",
+      "archive": "zip",
+
+      // Несколько адресов одного архива. Приложение замеряет их одновременно
+      // и берёт самый быстрый: заранее угадать, какой узел откроется в конкретной
+      // сети, невозможно.
+      "sources": [
+        { "url": "https://github.com/<ВАШ-АККАУНТ>/NekoConverter/releases/download/v1.0.0/pack-locales-1.0.0.zip", "label": "GitHub" },
+        { "url": "https://cdn.jsdelivr.net/gh/<ВАШ-АККАУНТ>/NekoConverter@v1.0.0/dist/downloads/pack-locales-1.0.0.zip", "label": "jsDelivr" }
+      ],
+
+      "providesEngines": [],
+      "providesFormats": [],
+      "formats": []
+    },
+
+  ]
+}

@@ -1,0 +1,11 @@
+# 构建产物
+bin/
+obj/
+
+# 打包产物（scripts/package-macos.sh 的输出），随时可以重新生成
+dist/
+
+# CLI 渲染出来的图是派生物，随时可以用
+#   mathgeo render samples/xx.problem.json
+# 重新生成，不进版本库
+samples/rendered/

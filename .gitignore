@@ -1,0 +1,14 @@
+# Артефакты сборки
+bin/
+obj/
+dist/
+
+# Символы отладки и файлы IDE
+*.dSYM/
+*.user
+.vs/
+.idea/
+*.swp
+
+# macOS
+.DS_Store

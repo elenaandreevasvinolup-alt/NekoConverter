@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>MathGeo.App</RootNamespace>
+    <AssemblyName>MathGeo</AssemblyName>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <InvariantGlobalization>false</InvariantGlobalization>
+
+    <!-- 桌面壳暂时不开 AOT：Avalonia 的 XAML 编译在 AOT 下要额外配置，
+         先把 demo 跑起来，AOT 等外壳稳定了再打开。 -->
+    <IsAotCompatible>false</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.1.2" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.1.2" />
+    <PackageReference Include="Avalonia.Headless" Version="12.1.2" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../MathGeo.Core/MathGeo.Core.csproj" />
+  </ItemGroup>
+
+  <!--
+    语言文件随外壳一起发出去：Core 里内嵌了一份保证程序总能说话，
+    但放在磁盘上的这一份才是译者能直接改的。
+  -->
+  <ItemGroup>
+    <None Include="../MathGeo.Core/Locales/strings.*.json" Link="Locales/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

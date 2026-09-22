@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "id": "sample-cube",
+  "kind": "3d-solid",
+  "lang": "zh-Hans",
+  "title": "正方体与体对角线",
+  "statement": "正方体 ABCD-A₁B₁C₁D₁ 的棱长为 4，求体对角线 AC₁ 的长。",
+  "objects": [
+    { "id": "cube", "type": "solid", "solid": "box", "size": [4, 4, 4] },
+    { "id": "AC1", "type": "segment", "a": "cube.A", "b": "cube.C1", "style": "answer" }
+  ],
+  "ask": { "target": "AC1", "measure": "length" },
+  "answer": {
+    "value": "4√3",
+    "steps": ["AC = √(4² + 4²) = 4√2", "AC₁ = √(AC² + CC₁²) = √(32 + 16) = 4√3"]
+  },
+  "view": { "camera": [35, 20, 24] },
+  "source": { "type": "manual", "textbook": "人教A版必修二", "page": "18" }
+}
