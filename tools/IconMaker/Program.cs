@@ -27,6 +27,14 @@ internal static class Program
     /// </summary>
     private const float CornerRadiusRatio = 0.2237f;
 
+    /// <summary>
+    /// Доля холста, которую занимает сама иконка. По сетке macOS иконка
+    /// вписывается в 824×824 внутри холста 1024×1024: вокруг остаётся
+    /// прозрачное поле примерно по 100 пикселей с каждой стороны.
+    /// Без этого поля иконка выглядит крупнее системных.
+    /// </summary>
+    private const float ContentRatio = 0.8047f;
+
     private static int Main(string[] args)
     {
         var outputDirectory = args.Length > 0
@@ -93,14 +101,19 @@ internal static class Program
 
             // Маска со скруглёнными углами: рисуем ею, а не поверх —
             // так края получаются гладкими, без каймы.
-            var radius = size * CornerRadiusRatio;
+            // Иконка занимает не весь холст: по краям остаётся прозрачное поле.
+            var inset = size * (1f - ContentRatio) / 2f;
+            var destination = new SKRect(inset, inset, size - inset, size - inset);
+
+            // Радиус считается от стороны самой иконки, а не от холста, иначе
+            // на уменьшенном квадрате углы скруглились бы слабее системных.
+            var radius = destination.Width * CornerRadiusRatio;
 
             using var rounded = new SKPath();
-            rounded.AddRoundRect(new SKRect(0, 0, size, size), radius, radius);
+            rounded.AddRoundRect(destination, radius, radius);
 
             canvas.ClipPath(rounded, SKClipOperation.Intersect, antialias: true);
 
-            var destination = new SKRect(0, 0, size, size);
             var sourceRect = new SKRect(cropX, cropY, cropX + side, cropY + side);
 
             using var image = SKImage.FromBitmap(source);

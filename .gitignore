@@ -12,3 +12,8 @@ dist/
 
 # macOS
 .DS_Store
+
+# Инструменты агента и кэш Python
+.kilo/
+__pycache__/
+*.pyc
