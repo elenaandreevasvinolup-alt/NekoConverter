@@ -20,9 +20,10 @@
   // их одновременно и берёт быстрейшую, а при обрыве переходит к следующей.
   "releaseBase": {
     "github": "https://github.com/elenaandreevasvinolup-alt/NekoConverter/releases/download/v1.0.0",
-    "gitee": "https://gitee.com/NekoAndreeva/NekoConverter/releases/download/v1.0.0",
+    "gitee": "https://gitee.com/NekoAndreeva/neko-converter/releases/download/v1.0.0",
     "jsdelivr": "https://cdn.jsdelivr.net/gh/elenaandreevasvinolup-alt/NekoConverter@v1.0.0/dist/downloads"
   },
+
 
 
 

@@ -182,7 +182,7 @@ def clear_upstream_urls(package_ids):
         f.write(text)
 
 
-def update_catalog(github_owner, gitee_owner, version):
+def update_catalog(github_owner, gitee_owner, gitee_repo, version):
     """
     Вписывает базовые адреса площадок.
 
@@ -202,11 +202,11 @@ def update_catalog(github_owner, gitee_owner, version):
   // их одновременно и берёт быстрейшую, а при обрыве переходит к следующей.
   "releaseBase": {
     "github": "https://github.com/%s/NekoConverter/releases/download/%s",
-    "gitee": "https://gitee.com/%s/NekoConverter/releases/download/%s",
+    "gitee": "https://gitee.com/%s/%s/releases/download/%s",
     "jsdelivr": "https://cdn.jsdelivr.net/gh/%s/NekoConverter@%s/dist/downloads"
   },
 
-''' % (github_owner, version, gitee_owner, version, github_owner, version)
+''' % (github_owner, version, gitee_owner, gitee_repo, version, github_owner, version)
 
     # заменяем существующий блок или добавляем новый
     if '"releaseBase"' in text:
@@ -231,11 +231,14 @@ def main():
     parser.add_argument('--owner', help='ник на GitHub и Gitee, если он совпадает')
     parser.add_argument('--github-owner', help='ник на GitHub')
     parser.add_argument('--gitee-owner', help='ник на Gitee')
+    parser.add_argument('--gitee-repo', default='NekoConverter',
+                        help='путь репозитория на Gitee (Gitee переводит CamelCase в kebab-case)')
     parser.add_argument('--version', default='v1.0.0', help='тег версии, например v1.0.0')
     args = parser.parse_args()
 
     github_owner = args.github_owner or args.owner
     gitee_owner = args.gitee_owner or args.owner or args.github_owner
+    gitee_repo = args.gitee_repo
 
     if not github_owner:
         print('Укажите --owner <ник> (или --github-owner и --gitee-owner)', file=sys.stderr)
@@ -288,7 +291,7 @@ def main():
     clear_upstream_urls([pid for pid in hashes if pid.startswith('dep-')])
 
     update_package_hashes(hashes)
-    update_catalog(github_owner, gitee_owner, args.version)
+    update_catalog(github_owner, gitee_owner, gitee_repo, args.version)
 
     print('=' * 70)
     print('КАТАЛОГ ОБНОВЛЁН')
@@ -307,7 +310,7 @@ def main():
     print('       https://github.com/%s/NekoConverter/releases/new' % github_owner)
     print()
     print(f'     Gitee — создайте релиз с тегом {args.version}:')
-    print('       https://gitee.com/%s/NekoConverter/releases/new' % gitee_owner)
+    print('       https://gitee.com/%s/%s/releases/new' % (gitee_owner, gitee_repo))
     print()
     print('     jsDelivr — ничего загружать не нужно: он отдаёт файлы')
     print('     прямо из репозитория GitHub. Достаточно, чтобы папка')
