@@ -40,6 +40,7 @@ public partial class App : Application
         // Пока поддерживается только классический десктопный режим (macOS/Windows/Linux).
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+#if !ANDROID && !IOS
             if (Program.PreviewTheme is { } theme)
             {
                 AppSettings.ForceTheme = theme;
@@ -83,6 +84,18 @@ public partial class App : Application
             {
                 RenderPreview(desktop, window, previewPath);
             }
+#else
+            // На телефоне аргументов командной строки нет, поэтому предпросмотр
+            // и окно сравнения недоступны — просто показываем главное окно.
+            desktop.MainWindow = new MainWindow();
+#endif
+        }
+        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)
+        {
+            // Мобильные платформы: окна как такового нет, есть единственное
+            // представление на весь экран. Оно переиспользует ту же вёрстку,
+            // что и настольное окно, — отдельного мобильного интерфейса нет.
+            singleView.MainView = new MainView();
         }
 
         base.OnFrameworkInitializationCompleted();

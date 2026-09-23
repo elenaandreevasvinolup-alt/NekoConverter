@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-  <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="35" />
+  <!-- targetSdkVersion совпадает с версией, под которую собирает SDK:
+       расхождение даёт предупреждение XA1006 на каждой сборке. -->
+  <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="36" />
 
   <!-- Доступ в сеть нужен только для загрузки пакетов-зависимостей. -->
   <uses-permission android:name="android.permission.INTERNET" />

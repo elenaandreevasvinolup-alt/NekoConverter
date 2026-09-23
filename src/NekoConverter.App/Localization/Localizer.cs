@@ -3,6 +3,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 
+// Под Android есть собственный Android.App.Application — псевдоним убирает
+// неоднозначность при сборке под эту платформу.
+using Application = Avalonia.Application;
+
 namespace NekoConverter.App.Localization;
 
 /// <summary>

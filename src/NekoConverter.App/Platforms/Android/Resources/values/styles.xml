@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--
+    Тема без заголовка: весь экран занимает наш интерфейс, системный заголовок
+    только отнимал бы место. Наследник AppCompat нужен потому, что активити
+    Avalonia — наследник AppCompatActivity, и без этого тема не подойдёт.
+  -->
+  <style name="MyTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+  </style>
+</resources>

@@ -84,9 +84,17 @@
     <Compile Remove="Platforms/iOS/**/*.cs" />
   </ItemGroup>
 
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net10.0-android'))">
-    <AndroidManifest>Platforms/Android/AndroidManifest.xml</AndroidManifest>
-  </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('net10.0-android'))">
+      <AndroidManifest>Platforms/Android/AndroidManifest.xml</AndroidManifest>
+    </PropertyGroup>
+
+    <!--
+      Ресурсы Android (тема и иконка) лежат рядом с манифестом, а не в корне
+      проекта, поэтому сборка о них сама не догадывается — подключаем явно.
+    -->
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net10.0-android'))">
+      <AndroidResource Include="Platforms/Android/Resources/**/*" />
+    </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net10.0-ios'))">
     <Compile Remove="Platforms/Android/**/*.cs" />
