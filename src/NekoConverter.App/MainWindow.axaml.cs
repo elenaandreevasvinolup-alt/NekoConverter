@@ -1,5 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using System.Diagnostics;
 using Ellipse = Avalonia.Controls.Shapes.Ellipse;
 using Rectangle = Avalonia.Controls.Shapes.Rectangle;
 using Avalonia.Input;
@@ -222,6 +224,8 @@ public partial class MainWindow : Window
         PopulateMcpCard();
         PopulatePreviewerSettings();
 
+        BuildNativeMenu();
+
         // Проверка сети идёт в фоне и не задерживает запуск.
         _ = CheckNetworkAsync();
 
@@ -253,6 +257,130 @@ public partial class MainWindow : Window
         this.FindControl<T>(name)
         ?? throw new InvalidOperationException(
             $"XAML element x:Name=\"{name}\" is missing. This is a build error, not a user error.");
+
+    /// <summary>
+    /// Собирает меню в системной строке macOS.
+    ///
+    /// Без него система показывает один пункт с именем приложения и парой
+    /// служебных команд: ни открыть файл, ни переключить страницу с клавиатуры
+    /// нельзя. Пункты только повторяют то, что уже есть на экране, — новых
+    /// возможностей меню не добавляет, это второй способ добраться до старых.
+    /// </summary>
+    private void BuildNativeMenu()
+    {
+        var menu = new NativeMenu();
+
+        // Первый пункт macOS называет именем приложения, поэтому здесь только
+        // команды, которые по системной привычке живут именно в нём.
+        var app = new NativeMenuItem("NekoConverter") { Menu = new NativeMenu() };
+        app.Menu!.Add(Item("menu.about_app", () => ShowPage(_aboutPage)));
+        app.Menu.Add(new NativeMenuItemSeparator());
+        app.Menu.Add(Item("menu.settings", () => ShowPage(_settingsPage), Key.OemComma, KeyModifiers.Meta));
+        app.Menu.Add(new NativeMenuItemSeparator());
+        app.Menu.Add(Item("menu.quit", QuitApplication, Key.Q, KeyModifiers.Meta));
+        menu.Add(app);
+
+        var file = new NativeMenuItem(Localizer.Get("menu.file")) { Menu = new NativeMenu() };
+        file.Menu!.Add(Item("menu.add_files", () => OnPickFile(null, new RoutedEventArgs()), Key.O, KeyModifiers.Meta));
+        file.Menu.Add(Item("input.paste", () => OnPasteImage(null, new RoutedEventArgs())));
+        file.Menu.Add(new NativeMenuItemSeparator());
+        file.Menu.Add(Item("menu.output_folder", () => OnPickOutputFolder(null, new RoutedEventArgs())));
+        file.Menu.Add(new NativeMenuItemSeparator());
+        file.Menu.Add(Item("menu.close_window", Close, Key.W, KeyModifiers.Meta));
+        menu.Add(file);
+
+        var edit = new NativeMenuItem(Localizer.Get("menu.edit")) { Menu = new NativeMenu() };
+        edit.Menu!.Add(Item("menu.undo", () => WithFocusedTextBox(b => b.Undo()), Key.Z, KeyModifiers.Meta));
+        edit.Menu.Add(Item("menu.redo", () => WithFocusedTextBox(b => b.Redo()), Key.Z, KeyModifiers.Meta | KeyModifiers.Shift));
+        edit.Menu.Add(new NativeMenuItemSeparator());
+        edit.Menu.Add(Item("menu.cut", () => WithFocusedTextBox(b => b.Cut()), Key.X, KeyModifiers.Meta));
+        edit.Menu.Add(Item("menu.copy", () => WithFocusedTextBox(b => b.Copy()), Key.C, KeyModifiers.Meta));
+        edit.Menu.Add(Item("menu.paste", () => WithFocusedTextBox(b => b.Paste()), Key.V, KeyModifiers.Meta));
+        edit.Menu.Add(Item("menu.select_all", () => WithFocusedTextBox(b => b.SelectAll()), Key.A, KeyModifiers.Meta));
+        menu.Add(edit);
+
+        var view = new NativeMenuItem(Localizer.Get("menu.view")) { Menu = new NativeMenu() };
+        view.Menu!.Add(Item("nav.convert", () => ShowPage(_convertPage), Key.D1, KeyModifiers.Meta));
+        view.Menu.Add(Item("nav.modules", () => ShowPage(_modulesPage), Key.D2, KeyModifiers.Meta));
+        view.Menu.Add(Item("nav.settings", () => ShowPage(_settingsPage), Key.D3, KeyModifiers.Meta));
+        view.Menu.Add(Item("nav.about", () => ShowPage(_aboutPage), Key.D4, KeyModifiers.Meta));
+        view.Menu.Add(new NativeMenuItemSeparator());
+        view.Menu.Add(Item("menu.toggle_theme", ToggleTheme, Key.T, KeyModifiers.Meta | KeyModifiers.Shift));
+        menu.Add(view);
+
+        var run = new NativeMenuItem(Localizer.Get("menu.run")) { Menu = new NativeMenu() };
+        run.Menu!.Add(Item("convert.all", () => OnConvertAll(null, new RoutedEventArgs()), Key.Enter, KeyModifiers.Meta));
+        menu.Add(run);
+
+        var help = new NativeMenuItem(Localizer.Get("menu.help")) { Menu = new NativeMenu() };
+        help.Menu!.Add(Item("menu.repository", () => OpenLink(RepositoryUrl)));
+        help.Menu.Add(Item("menu.issues", () => OpenLink($"{RepositoryUrl}/issues")));
+        menu.Add(help);
+
+        NativeMenu.SetMenu(this, menu);
+    }
+
+    private const string RepositoryUrl = "https://github.com/elenaandreevasvinolup-alt/NekoConverter";
+
+    private static NativeMenuItem Item(string key, Action action, Key? gesture = null, KeyModifiers modifiers = KeyModifiers.None)
+    {
+        var item = new NativeMenuItem(Localizer.Get(key)) { Command = new MenuCommand(action) };
+
+        if (gesture is { } key_)
+        {
+            item.Gesture = new KeyGesture(key_, modifiers);
+        }
+
+        return item;
+    }
+
+    private void QuitApplication()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.Shutdown();
+        }
+    }
+
+    /// <summary>
+    /// Правка работает с тем полем, куда сейчас смотрит курсор.
+    ///
+    /// В системном меню некому подставить адресата, поэтому его ищем сами:
+    /// без этого «Копировать» оставалось бы серым навсегда.
+    /// </summary>
+    private void WithFocusedTextBox(Action<TextBox> action)
+    {
+        if (TopLevel.GetTopLevel(this)?.FocusManager?.GetFocusedElement() is TextBox box)
+        {
+            action(box);
+        }
+    }
+
+    private void ToggleTheme() =>
+        SetTheme(AppSettings.IsEffectivelyDark(_settings.Theme) ? ThemeMode.Light : ThemeMode.Dark);
+
+    private static void OpenLink(string url)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch
+        {
+            // Открыть ссылку может не получиться (нет браузера по умолчанию,
+            // запрещено политикой) — это не повод ронять приложение.
+        }
+    }
+
+    /// <summary>Пункт меню — это команда: без неё нажимать нечего.</summary>
+    private sealed class MenuCommand(Action action) : System.Windows.Input.ICommand
+    {
+        public event EventHandler? CanExecuteChanged { add { } remove { } }
+
+        public bool CanExecute(object? parameter) => true;
+
+        public void Execute(object? parameter) => action();
+    }
 
     private void WireEvents()
     {

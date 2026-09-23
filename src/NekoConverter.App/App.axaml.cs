@@ -10,7 +10,14 @@ namespace NekoConverter.App;
 
 public partial class App : Application
 {
-    public override void Initialize() => AvaloniaXamlLoader.Load(this);
+    public override void Initialize()
+    {
+        // Имя показывается в системной строке macOS. Без него там красуется
+        // «Avalonia App» — имя по умолчанию, которое ничего не говорит о программе.
+        Name = "NekoConverter";
+
+        AvaloniaXamlLoader.Load(this);
+    }
 
     public override void OnFrameworkInitializationCompleted()
     {
