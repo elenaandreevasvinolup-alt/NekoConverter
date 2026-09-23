@@ -2,6 +2,10 @@ using NekoConverter.Core.Preview;
 using Avalonia;
 using Avalonia.Styling;
 
+// Под Android есть собственный Android.App.Application — псевдоним убирает
+// неоднозначность при сборке под эту платформу.
+using Application = Avalonia.Application;
+
 namespace NekoConverter.App;
 
 /// <summary>Как выбирается тема оформления.</summary>

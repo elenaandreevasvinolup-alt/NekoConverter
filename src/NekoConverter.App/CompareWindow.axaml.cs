@@ -7,6 +7,10 @@ using NekoConverter.App.Localization;
 using NekoConverter.Core;
 using NekoConverter.Core.Preview;
 
+// Под Android есть собственный Android.Widget.Button — псевдоним убирает
+// неоднозначность при сборке под эту платформу.
+using Button = Avalonia.Controls.Button;
+
 namespace NekoConverter.App;
 
 /// <summary>

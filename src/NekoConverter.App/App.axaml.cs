@@ -6,6 +6,10 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using NekoConverter.App.Localization;
 
+// Под Android есть собственный Android.App.Application: без псевдонима
+// компилятор не понимает, от какого класса наследуется App.
+using Application = Avalonia.Application;
+
 namespace NekoConverter.App;
 
 public partial class App : Application

@@ -4,6 +4,13 @@ using Avalonia.Controls.ApplicationLifetimes;
 using System.Diagnostics;
 using Ellipse = Avalonia.Controls.Shapes.Ellipse;
 using Rectangle = Avalonia.Controls.Shapes.Rectangle;
+
+// Сборка под Android подключает пространство имён Android.Widget, где лежат
+// собственные Button, CheckBox и ProgressBar. Без этих псевдонимов компилятор
+// не знает, какой из двух типов имеется в виду, и падает на каждой ссылке.
+using Button = Avalonia.Controls.Button;
+using CheckBox = Avalonia.Controls.CheckBox;
+using ProgressBar = Avalonia.Controls.ProgressBar;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
@@ -229,8 +236,12 @@ public partial class MainWindow : Window
         // Проверка сети идёт в фоне и не задерживает запуск.
         _ = CheckNetworkAsync();
 
+#if !ANDROID && !IOS
         // Режим предпросмотра: показываем нужную страницу, грузим файл и при
         // необходимости раскрываем настройки — чтобы снять состояние без ручных кликов.
+        //
+        // Только для настольных сборок: на телефоне аргументов командной строки нет,
+        // и сам Program в мобильной сборке не компилируется.
         if (Program.PreviewPage is { } previewPage)
         {
             ShowPage(previewPage.ToLowerInvariant() switch
@@ -242,15 +253,11 @@ public partial class MainWindow : Window
             });
         }
 
-
         if (Program.PreviewFiles is { Length: > 0 } previewFiles)
         {
             AddFiles(previewFiles.Where(File.Exists));
-
-            if (false)
-            {
-                    }
         }
+#endif
     }
 
     private T Require<T>(string name) where T : Control =>
